@@ -12,34 +12,35 @@ async function find() {
 }
 
 async function findById(scheme_id) {
-  const steps = await db('schemes AS sc')
+  const rows = await db('schemes AS sc')
     .leftJoin('steps AS st', 'sc.scheme_id', 'st.scheme_id')
     .where('sc.scheme_id', scheme_id)
-    .select('sc.scheme_id', 'sc.scheme_name', 'sc.*')
-    .orderBy('st.step_number')
+    .select('sc.scheme_id', 'sc.scheme_name', 'st.*')
+    .orderBy('st.step_number', 'asc')
 
-  const result = (
-    {
-      scheme_id: steps[0].scheme_id
-      === null
-        ? scheme_id
-        : steps[0].scheme_id,
-      scheme_name: steps[0].scheme_name,
-      steps: []
-    }
-  )
+  const scheme = {
+    scheme_id: rows[0].scheme_id
+    === null
+      ? scheme_id
+      : rows[0].scheme_id,
+    scheme_name: rows[0].scheme_name,
+    steps: []
+  }
 
-  steps.forEach(step => {
-    if (step.step_id) {
-      result.steps.push({
-        step_id: step.step_id,
-        step_number: step.step_number,
-        instructions: step.instructions,
-      })
-    }
-  })
+  if (rows[0].step_id
+    !== null) {
+    rows.forEach(step => {
+      if (!rows.step_id) {
+        scheme.steps.push({
+          step_id: step.step_id,
+          step_number: step.step_number,
+          instructions: step.instructions
+        })
+      }
+    })
+  }
 
-  return result
+  return scheme
 }
 
 async function findSteps(scheme_id) {
@@ -70,11 +71,21 @@ async function add(scheme) {
   const added = await db('schemes')
     .insert(scheme)
 
-  return findById(added)
+  return db('schemes')
+    .where('scheme_id', added)
+    .first()
 }
 
 async function addStep(scheme_id, step) {
+  const newStep = {
+    step_number: step.step_number,
+    instructions: step.instructions,
+    scheme_id: scheme_id
+  }
 
+  return db('steps')
+    .insert(newStep)
+    .then(() => findSteps(scheme_id))
   // EXERCISE E
   /*
     1E- This function adds a step to the scheme with the given `scheme_id`
