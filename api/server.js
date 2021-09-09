@@ -1,10 +1,11 @@
-const express = require('express');
+const express = require('express')
+const helmet = require('helmet')
+const SchemeRouter = require('./schemes/scheme-router.js')
 
-const SchemeRouter = require('./schemes/scheme-router.js');
+const server = express()
 
-const server = express();
+server.use(express.json())
+server.use(helmet())
+server.use('/api/schemes', SchemeRouter)
 
-server.use(express.json());
-server.use('/api/schemes', SchemeRouter);
-
-module.exports = server;
+module.exports = server
