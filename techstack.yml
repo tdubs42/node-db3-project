@@ -2,7 +2,7 @@ repo_name: tdubs42/node-db3-project
 report_id: f35829a95845f445a62d0b8551277a1a
 version: 0.1
 repo_type: Public
-timestamp: '2024-01-05T09:06:21+00:00'
+timestamp: '2024-02-29T18:23:34+00:00'
 requested_by: tdubs42
 provider: github
 branch: main
@@ -97,7 +97,7 @@ tools:
   last_updated_by: Diandra Ryan-Mas
   last_updated_on: 2019-07-13 15:04:19.000000000 Z
 - name: SuperTest
-  description: 'A library for testing node.js HTTP servers '
+  description: A library for testing node.js HTTP servers
   website_url: https://www.npmjs.com/package/supertest
   version: 6.1.4
   license: MIT
